@@ -118,15 +118,10 @@
 
   /* счётчик */
   .views {
-    position: absolute; top: 14px; right: 14px;
+    position: absolute; top: 12px; right: 12px;
     z-index: 5;
-    display: flex; align-items: center; gap: 7px;
-    padding: 6px 12px;
-    border-radius: 999px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px; color: var(--muted);
   }
-  .views img { height: 12px; display: block; opacity: .85; }
+  .views img { height: 20px; display: block; }
 
   /* спасибо за просмотр */
   .thanks {
@@ -341,9 +336,10 @@
     <span>спасибо за просмотр!</span>
   </div>
 
-  <div class="views glass">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
-    <img src="https://hits.sh/wwizzer/wwizzer.github.io.svg?style=flat-square&label=%D0%BF%D1%80%D0%BE%D1%81%D0%BC%D0%BE%D1%82%D1%80%D1%8B&color=8a5cf5" alt="просмотры">
+  <div class="views">
+    <img src="https://api.visitorbadge.io/api/visitors?path=wwizzer.github.io&label=views&labelColor=1a1522&countColor=8a5cf5"
+         alt="просмотры"
+         onerror="this.onerror=null;this.src='https://count.getloli.com/get/@wwizzer-bio?theme=rule34'">
   </div>
 
   <div class="inner">
