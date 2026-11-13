@@ -468,13 +468,11 @@
 
   // 3D-наклон карточки за курсором — после завершения входной анимации
   var card = document.querySelector('.card');
-  var noMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   card.addEventListener('animationend', function (e) {
     if (e.animationName !== 'cardIn') return;
     card.style.opacity = '1';
     card.style.filter = 'none';
     card.style.animation = 'none';
-    if (noMotion) return;
 
     var tx = 0, ty = 0, cx = 0, cy = 0, raf = null;
     function loop() {
@@ -488,8 +486,8 @@
       var r = card.getBoundingClientRect();
       var x = (e.clientX - (r.left + r.width / 2)) / (r.width / 2);
       var y = (e.clientY - (r.top + r.height / 2)) / (r.height / 2);
-      tx = Math.max(-1, Math.min(1, x)) * 4.5;
-      ty = Math.max(-1, Math.min(1, y)) * -4.5;
+      tx = Math.max(-1, Math.min(1, x)) * 5.5;
+      ty = Math.max(-1, Math.min(1, y)) * -5.5;
       if (!raf) raf = requestAnimationFrame(loop);
     });
     document.addEventListener('mouseleave', function () {
