@@ -89,7 +89,8 @@
     position: absolute;
     top: -12%;
     font-family: 'JetBrains Mono', monospace;
-    color: rgba(255,255,255,.055);
+    color: rgba(167, 139, 250, .16);
+    text-shadow: 0 0 18px rgba(124, 156, 255, .25);
     white-space: nowrap;
     user-select: none;
     animation: fall linear infinite;
@@ -99,9 +100,6 @@
     8%   { opacity: 1; }
     90%  { opacity: 1; }
     100% { transform: translateY(115vh) rotate(12deg); opacity: 0; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .fall { animation: none; opacity: .05; }
   }
 
   /* ---------- анимации появления ---------- */
@@ -141,7 +139,7 @@
     margin: 22px 0 6px;
     line-height: 1.08;
   }
-  h1 .name-line { font-size: clamp(38px, 8vw, 66px); }
+  h1 .name-line { font-size: clamp(30px, 6.5vw, 54px); }
   h1 .aka-line {
     font-family: 'JetBrains Mono', monospace;
     font-size: 12px;
@@ -155,20 +153,17 @@
   /* медленный фиолетово-чёрный перелив */
   .grad {
     background: linear-gradient(90deg,
-      #141418 0%, #7b4fd8 18%, #b48cff 38%, #3d2f5c 55%,
-      #141418 72%, #8a5cf5 88%, #141418 100%);
-    background-size: 260% 100%;
+      #131316 0%, #8a5cf5 15%, #c39bff 30%, #6a4fd0 45%,
+      #131316 60%, #9b6cff 75%, #4a3a8e 88%, #131316 100%);
+    background-size: 280% 100%;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    animation: shimmer 10s ease-in-out infinite alternate;
+    animation: shimmer 8s ease-in-out infinite alternate;
   }
   @keyframes shimmer {
     from { background-position: 0% 50%; }
     to   { background-position: 100% 50%; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .grad { animation: none; }
   }
 
   .handle {
@@ -341,9 +336,9 @@
   <div class="rise d1"><span class="status"><span class="dot"></span>онлайн · открыт к общению</span></div>
 
   <h1 class="rise d2">
-    <span class="grad name-line">Ванек</span>
-    <span class="aka-line">· aka ·</span>
     <span class="grad nick-line">wwizzer</span>
+    <span class="aka-line">· aka ·</span>
+    <span class="grad name-line">Ванек</span>
   </h1>
   <p class="handle rise d3">творю · разбираюсь в людях · собираю из идей рабочее</p>
 
