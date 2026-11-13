@@ -50,9 +50,9 @@
       inset 0 1px 0 rgba(255,255,255,.08);
     isolation: isolate;
     opacity: 0;
-    transform: translateY(30px) scale(.98);
-    filter: blur(8px);
-    animation: cardIn 1.3s cubic-bezier(.16,1,.3,1) forwards;
+    transform: translateY(44px) scale(.97);
+    filter: blur(10px);
+    animation: cardIn 2.2s cubic-bezier(.16,1,.3,1) forwards;
   }
   @keyframes cardIn {
     to {
@@ -60,6 +60,28 @@
       transform: none;
       filter: blur(0);
     }
+  }
+
+  /* стеклянный блик, пробегает по карточке */
+  .sheen {
+    position: absolute;
+    top: -20%; bottom: -20%;
+    left: -60%;
+    width: 50%;
+    background: linear-gradient(100deg,
+      transparent 20%,
+      rgba(255,255,255,.05) 42%,
+      rgba(255,255,255,.12) 50%,
+      rgba(255,255,255,.05) 58%,
+      transparent 80%);
+    transform: skewX(-16deg) translateX(0);
+    animation: sheen 8.5s ease-in-out infinite;
+    z-index: 3;
+    pointer-events: none;
+  }
+  @keyframes sheen {
+    0%, 52%  { transform: skewX(-16deg) translateX(0); }
+    82%, 100% { transform: skewX(-16deg) translateX(340%); }
   }
 
   .card-bg {
@@ -285,9 +307,9 @@
   @keyframes blink { 0%,100% { opacity: 1 } 50% { opacity: .3 } }
 
   /* появления */
-  .rise { opacity: 0; transform: translateY(22px); filter: blur(3px); animation: rise .95s cubic-bezier(.16,1,.3,1) forwards; }
-  .d1 { animation-delay: .45s } .d2 { animation-delay: .58s } .d3 { animation-delay: .72s }
-  .d4 { animation-delay: .86s } .d5 { animation-delay: 1s } .d6 { animation-delay: 1.14s }
+  .rise { opacity: 0; transform: translateY(26px); filter: blur(4px); animation: rise 1.3s cubic-bezier(.16,1,.3,1) forwards; }
+  .d1 { animation-delay: 1.1s } .d2 { animation-delay: 1.32s } .d3 { animation-delay: 1.54s }
+  .d4 { animation-delay: 1.76s } .d5 { animation-delay: 1.98s } .d6 { animation-delay: 2.2s }
   @keyframes rise {
     to { opacity: 1; transform: none; filter: blur(0); }
   }
@@ -302,6 +324,7 @@
 
 <article class="card">
   <div class="card-bg"></div>
+  <div class="sheen"></div>
 
   <div class="fall-layer" aria-hidden="true">
     <span class="fall rain" style="left: 5%;  height: 62px; animation-duration: 3.1s; animation-delay: -1.2s;"></span>
@@ -442,6 +465,38 @@
   // зимний режим: декабрь, январь, февраль
   var m = new Date().getMonth();
   if (m === 11 || m <= 1) document.body.classList.add('winter');
+
+  // 3D-наклон карточки за курсором — после завершения входной анимации
+  var card = document.querySelector('.card');
+  var noMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  card.addEventListener('animationend', function (e) {
+    if (e.animationName !== 'cardIn') return;
+    card.style.opacity = '1';
+    card.style.filter = 'none';
+    card.style.animation = 'none';
+    if (noMotion) return;
+
+    var tx = 0, ty = 0, cx = 0, cy = 0, raf = null;
+    function loop() {
+      cx += (tx - cx) * .07;
+      cy += (ty - cy) * .07;
+      card.style.transform = 'perspective(1100px) rotateY(' + cx + 'deg) rotateX(' + cy + 'deg)';
+      if (Math.abs(tx - cx) > .01 || Math.abs(ty - cy) > .01) raf = requestAnimationFrame(loop);
+      else { card.style.transform = ''; raf = null; }
+    }
+    document.addEventListener('mousemove', function (e) {
+      var r = card.getBoundingClientRect();
+      var x = (e.clientX - (r.left + r.width / 2)) / (r.width / 2);
+      var y = (e.clientY - (r.top + r.height / 2)) / (r.height / 2);
+      tx = Math.max(-1, Math.min(1, x)) * 4.5;
+      ty = Math.max(-1, Math.min(1, y)) * -4.5;
+      if (!raf) raf = requestAnimationFrame(loop);
+    });
+    document.addEventListener('mouseleave', function () {
+      tx = 0; ty = 0;
+      if (!raf) raf = requestAnimationFrame(loop);
+    });
+  });
 </script>
 
 </body>
