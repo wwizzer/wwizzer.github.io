@@ -89,8 +89,8 @@
     position: absolute;
     top: -12%;
     font-family: 'JetBrains Mono', monospace;
-    color: rgba(167, 139, 250, .16);
-    text-shadow: 0 0 18px rgba(124, 156, 255, .25);
+    color: rgba(167, 139, 250, .12);
+    text-shadow: 0 0 18px rgba(124, 156, 255, .15);
     white-space: nowrap;
     user-select: none;
     animation: fall linear infinite;
@@ -133,37 +133,39 @@
 
   h1 {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: 18px;
+    row-gap: 4px;
     font-weight: 800;
-    letter-spacing: -2.5px;
+    letter-spacing: -2px;
     margin: 22px 0 6px;
-    line-height: 1.08;
+    line-height: 1.1;
   }
-  h1 .name-line { font-size: clamp(30px, 6.5vw, 54px); }
+  h1 .name-line { font-size: clamp(26px, 5vw, 44px); letter-spacing: -1px; }
   h1 .aka-line {
     font-family: 'JetBrains Mono', monospace;
     font-size: 12px;
     font-weight: 400;
     letter-spacing: 4px;
     color: var(--muted);
-    margin: 10px 0 6px;
   }
-  h1 .nick-line { font-size: clamp(44px, 9.5vw, 80px); }
+  h1 .nick-line { font-size: clamp(38px, 8.5vw, 72px); }
 
-  /* медленный фиолетово-чёрный перелив */
+  /* фиолетово-чёрный поток: непрерывный цикл в одну сторону */
   .grad {
     background: linear-gradient(90deg,
-      #131316 0%, #8a5cf5 15%, #c39bff 30%, #6a4fd0 45%,
-      #131316 60%, #9b6cff 75%, #4a3a8e 88%, #131316 100%);
-    background-size: 280% 100%;
+      #131316 0%, #8a5cf5 12%, #c39bff 25%, #6a4fd0 40%,
+      #131316 50%, #9b6cff 63%, #4a3a8e 78%, #131316 100%);
+    background-size: 200% 100%;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    animation: shimmer 8s ease-in-out infinite alternate;
+    animation: shimmer 12s linear infinite;
   }
   @keyframes shimmer {
     from { background-position: 0% 50%; }
-    to   { background-position: 100% 50%; }
+    to   { background-position: -200% 50%; }
   }
 
   .handle {
@@ -336,11 +338,11 @@
   <div class="rise d1"><span class="status"><span class="dot"></span>онлайн · открыт к общению</span></div>
 
   <h1 class="rise d2">
-    <span class="grad nick-line">wwizzer</span>
-    <span class="aka-line">· aka ·</span>
     <span class="grad name-line">Ванек</span>
+    <span class="aka-line">· aka ·</span>
+    <span class="grad nick-line">wwizzer</span>
   </h1>
-  <p class="handle rise d3">творю · разбираюсь в людях · собираю из идей рабочее</p>
+  <p class="handle rise d3">творю · генерирую новое из ничего · собираю из идей рабочее</p>
 
   <div class="tags rise d4">
     <span class="tag">🧠 социальный инженер</span>
