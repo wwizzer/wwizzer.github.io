@@ -78,6 +78,32 @@
     padding: 72px 24px 60px;
   }
 
+  /* ---------- падающие слова ---------- */
+  .fall-layer {
+    position: fixed; inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .fall {
+    position: absolute;
+    top: -12%;
+    font-family: 'JetBrains Mono', monospace;
+    color: rgba(255,255,255,.055);
+    white-space: nowrap;
+    user-select: none;
+    animation: fall linear infinite;
+  }
+  @keyframes fall {
+    0%   { transform: translateY(0) rotate(0deg); opacity: 0; }
+    8%   { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { transform: translateY(115vh) rotate(12deg); opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .fall { animation: none; opacity: .05; }
+  }
+
   /* ---------- анимации появления ---------- */
   .rise { opacity: 0; transform: translateY(18px); animation: rise .7s cubic-bezier(.2,.7,.3,1) forwards; }
   .d1 { animation-delay: .05s } .d2 { animation-delay: .15s } .d3 { animation-delay: .25s }
@@ -108,17 +134,41 @@
   }
 
   h1 {
-    font-size: clamp(44px, 9vw, 76px);
+    display: flex;
+    flex-direction: column;
     font-weight: 800;
     letter-spacing: -2.5px;
     margin: 22px 0 6px;
-    line-height: 1.05;
+    line-height: 1.08;
   }
-  h1 .nick {
-    background: linear-gradient(100deg, var(--accent), var(--accent2));
+  h1 .name-line { font-size: clamp(38px, 8vw, 66px); }
+  h1 .aka-line {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 4px;
+    color: var(--muted);
+    margin: 10px 0 6px;
+  }
+  h1 .nick-line { font-size: clamp(44px, 9.5vw, 80px); }
+
+  /* медленный фиолетово-чёрный перелив */
+  .grad {
+    background: linear-gradient(90deg,
+      #141418 0%, #7b4fd8 18%, #b48cff 38%, #3d2f5c 55%,
+      #141418 72%, #8a5cf5 88%, #141418 100%);
+    background-size: 260% 100%;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+    animation: shimmer 10s ease-in-out infinite alternate;
+  }
+  @keyframes shimmer {
+    from { background-position: 0% 50%; }
+    to   { background-position: 100% 50%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .grad { animation: none; }
   }
 
   .handle {
@@ -243,6 +293,15 @@
     color: #5c5c68;
     padding-top: 8px;
   }
+  footer .cat {
+    width: 64px;
+    display: block;
+    margin: 0 auto 14px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    transition: transform .3s;
+  }
+  footer .cat:hover { transform: scale(1.12) rotate(-4deg); }
 
   @media (max-width: 560px) {
     .wrap { padding-top: 52px; }
@@ -256,18 +315,42 @@
 <div class="orb orb-1"></div>
 <div class="orb orb-2"></div>
 
+<div class="fall-layer" aria-hidden="true">
+  <span class="fall" style="left: 4%;  font-size: 14px; animation-duration: 42s; animation-delay: -6s;">function</span>
+  <span class="fall" style="left: 12%; font-size: 18px; animation-duration: 55s; animation-delay: -28s;">osint</span>
+  <span class="fall" style="left: 22%; font-size: 12px; animation-duration: 38s; animation-delay: -14s;">git commit -m</span>
+  <span class="fall" style="left: 30%; font-size: 16px; animation-duration: 50s; animation-delay: -40s;">async / await</span>
+  <span class="fall" style="left: 39%; font-size: 13px; animation-duration: 44s; animation-delay: -2s;">syntax</span>
+  <span class="fall" style="left: 47%; font-size: 19px; animation-duration: 60s; animation-delay: -33s;">terminal</span>
+  <span class="fall" style="left: 55%; font-size: 12px; animation-duration: 36s; animation-delay: -20s;">debug</span>
+  <span class="fall" style="left: 62%; font-size: 15px; animation-duration: 48s; animation-delay: -10s;">compile</span>
+  <span class="fall" style="left: 70%; font-size: 13px; animation-duration: 40s; animation-delay: -45s;">binary</span>
+  <span class="fall" style="left: 78%; font-size: 17px; animation-duration: 53s; animation-delay: -25s;">kernel</span>
+  <span class="fall" style="left: 86%; font-size: 12px; animation-duration: 37s; animation-delay: -17s;">regex</span>
+  <span class="fall" style="left: 92%; font-size: 15px; animation-duration: 46s; animation-delay: -50s;">deploy</span>
+  <span class="fall" style="left: 8%;  font-size: 12px; animation-duration: 47s; animation-delay: -35s;">prompt</span>
+  <span class="fall" style="left: 26%; font-size: 14px; animation-duration: 57s; animation-delay: -8s;">ssh tunnel</span>
+  <span class="fall" style="left: 44%; font-size: 12px; animation-duration: 39s; animation-delay: -22s;">payload</span>
+  <span class="fall" style="left: 58%; font-size: 16px; animation-duration: 51s; animation-delay: -47s;">python</span>
+  <span class="fall" style="left: 74%; font-size: 12px; animation-duration: 43s; animation-delay: -12s;">hash map</span>
+  <span class="fall" style="left: 88%; font-size: 14px; animation-duration: 49s; animation-delay: -30s;">latency</span>
+</div>
+
 <main class="wrap">
 
   <div class="rise d1"><span class="status"><span class="dot"></span>онлайн · открыт к общению</span></div>
 
-  <h1 class="rise d2">Ванек <span class="nick">wwizzer</span></h1>
-  <p class="handle rise d3">aka <b>@wwizzer</b> · играю · творю · разбираюсь в людях</p>
+  <h1 class="rise d2">
+    <span class="grad name-line">Ванек</span>
+    <span class="aka-line">· aka ·</span>
+    <span class="grad nick-line">wwizzer</span>
+  </h1>
+  <p class="handle rise d3">творю · разбираюсь в людях · собираю из идей рабочее</p>
 
   <div class="tags rise d4">
-    <span class="tag">🎮 играю в игры</span>
-    <span class="tag">🎨 творческая личность</span>
     <span class="tag">🧠 социальный инженер</span>
-    <span class="tag">🕵️ <span class="dim">в прошлом</span> osint-разведка</span>
+    <span class="tag">⚙️ инженер по генеративной разработке</span>
+    <span class="tag">🕵️ <span class="dim">в прошлом</span> osint-разведчик</span>
   </div>
 
   <section class="rise d5">
@@ -332,7 +415,10 @@
     </div>
   </section>
 
-  <footer class="rise d6">wwizzer © 2026 · сделано с ♥</footer>
+  <footer class="rise d6">
+    <img class="cat" src="cat-wave.gif" alt="кот машет рукой">
+    <div>wwizzer © 2026 · сделано с любовью</div>
+  </footer>
 
 </main>
 
