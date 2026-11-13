@@ -4,169 +4,142 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>wwizzer — био</title>
-<meta name="description" content="Ванек aka wwizzer — игрок, творческая личность, социальный инженер.">
+<meta name="description" content="Ванек aka wwizzer — социальный инженер, инженер по генеративной разработке.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0a0a0c;
-    --surface: #121216;
-    --border: #232329;
-    --text: #e8e8ec;
-    --muted: #8a8a96;
-    --accent: #7c9cff;
-    --accent2: #b48cff;
-    --radius: 16px;
+    --bg: #07070a;
+    --glass: rgba(20, 16, 34, .38);
+    --glass-strong: rgba(24, 18, 42, .55);
+    --stroke: rgba(180, 140, 255, .22);
+    --text: #ececf2;
+    --muted: #a49ab8;
+    --accent: #b48cff;
+    --accent2: #d9b3ff;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  html { scroll-behavior: smooth; }
 
   body {
     background: var(--bg);
     color: var(--text);
     font-family: 'Manrope', system-ui, sans-serif;
     line-height: 1.6;
-    overflow-x: hidden;
     min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 28px 16px;
   }
 
-  ::selection { background: rgba(124,156,255,.3); }
+  ::selection { background: rgba(180,140,255,.35); }
 
-  /* ---------- фоновые элементы ---------- */
-  .orb {
-    position: fixed;
-    border-radius: 50%;
-    filter: blur(110px);
-    opacity: .35;
-    pointer-events: none;
-    z-index: 0;
-  }
-  .orb-1 {
-    width: 480px; height: 480px;
-    background: radial-gradient(circle, #4a63d8, transparent 70%);
-    top: -140px; left: -120px;
-    animation: drift1 22s ease-in-out infinite alternate;
-  }
-  .orb-2 {
-    width: 400px; height: 400px;
-    background: radial-gradient(circle, #8a4ad8, transparent 70%);
-    bottom: -120px; right: -100px;
-    animation: drift2 28s ease-in-out infinite alternate;
-  }
-  @keyframes drift1 { to { transform: translate(90px, 60px) scale(1.15); } }
-  @keyframes drift2 { to { transform: translate(-70px, -50px) scale(1.1); } }
-
-  .grid-bg {
-    position: fixed; inset: 0;
-    background-image:
-      linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
-    background-size: 56px 56px;
-    mask-image: radial-gradient(ellipse 90% 70% at 50% 30%, #000 30%, transparent 100%);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .wrap {
+  /* ============ КАРТОЧКА ============ */
+  .card {
     position: relative;
-    z-index: 1;
-    max-width: 760px;
-    margin: 0 auto;
-    padding: 72px 24px 60px;
+    width: min(420px, 100%);
+    border-radius: 30px;
+    overflow: hidden;
+    border: 1px solid rgba(180,140,255,.16);
+    box-shadow:
+      0 30px 80px rgba(0,0,0,.65),
+      inset 0 1px 0 rgba(255,255,255,.08);
+    isolation: isolate;
+    opacity: 0;
+    transform: translateY(14px);
+    animation: cardIn .8s cubic-bezier(.2,.7,.3,1) forwards;
+  }
+  @keyframes cardIn { to { opacity: 1; transform: none; } }
+
+  .card-bg {
+    position: absolute; inset: 0;
+    background: url('assets/forest.jpg') center / cover no-repeat;
+    z-index: -2;
+  }
+  .card-bg::after {
+    content: "";
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(180deg, rgba(10,7,18,.25) 0%, rgba(10,7,18,.45) 55%, rgba(8,6,14,.72) 100%),
+      radial-gradient(120% 60% at 50% 0%, rgba(124,80,220,.10), transparent 60%);
   }
 
-  /* ---------- падающие слова ---------- */
-  .fall-layer {
-    position: fixed; inset: 0;
-    overflow: hidden;
-    pointer-events: none;
-    z-index: 0;
+  .inner {
+    position: relative;
+    padding: 64px 26px 26px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
+
+  /* падающее: снег + слова */
+  .fall-layer { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: -1; }
   .fall {
-    position: absolute;
-    top: -12%;
+    position: absolute; top: -12%;
     font-family: 'JetBrains Mono', monospace;
-    color: rgba(167, 139, 250, .12);
-    text-shadow: 0 0 18px rgba(124, 156, 255, .15);
-    white-space: nowrap;
-    user-select: none;
+    white-space: nowrap; user-select: none;
+    color: rgba(217, 179, 255, .13);
+    text-shadow: 0 0 14px rgba(180,140,255,.15);
     animation: fall linear infinite;
   }
+  .fall.snow { font-size: 13px; color: rgba(255,255,255,.35); text-shadow: none; }
   @keyframes fall {
     0%   { transform: translateY(0) rotate(0deg); opacity: 0; }
     8%   { opacity: 1; }
     90%  { opacity: 1; }
-    100% { transform: translateY(115vh) rotate(12deg); opacity: 0; }
+    100% { transform: translateY(115vh) rotate(10deg); opacity: 0; }
   }
 
-  /* ---------- анимации появления ---------- */
-  .rise { opacity: 0; transform: translateY(18px); animation: rise .7s cubic-bezier(.2,.7,.3,1) forwards; }
-  .d1 { animation-delay: .05s } .d2 { animation-delay: .15s } .d3 { animation-delay: .25s }
-  .d4 { animation-delay: .35s } .d5 { animation-delay: .45s } .d6 { animation-delay: .55s }
-  @keyframes rise { to { opacity: 1; transform: none; } }
+  /* glass-хелпер */
+  .glass {
+    background: var(--glass);
+    border: 1px solid var(--stroke);
+    backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.10);
+  }
 
-  /* ---------- хиро ---------- */
-  .status {
-    display: inline-flex; align-items: center; gap: 8px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12.5px; color: var(--muted);
-    border: 1px solid var(--border);
+  /* счётчик */
+  .views {
+    position: absolute; top: 14px; right: 14px;
+    z-index: 5;
+    display: flex; align-items: center; gap: 7px;
+    padding: 6px 12px;
     border-radius: 999px;
-    padding: 6px 14px;
-    background: rgba(18,18,22,.7);
-    backdrop-filter: blur(8px);
-  }
-  .status .dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: #4ade80;
-    box-shadow: 0 0 0 0 rgba(74,222,128,.55);
-    animation: pulse 2.2s infinite;
-  }
-  @keyframes pulse {
-    0%   { box-shadow: 0 0 0 0 rgba(74,222,128,.55); }
-    70%  { box-shadow: 0 0 0 9px rgba(74,222,128,0); }
-    100% { box-shadow: 0 0 0 0 rgba(74,222,128,0); }
-  }
-
-  h1 {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    column-gap: 18px;
-    row-gap: 4px;
-    font-weight: 800;
-    letter-spacing: -2px;
-    margin: 22px 0 6px;
-    line-height: 1.1;
-  }
-  h1 .name-line {
-    font-size: clamp(38px, 8.5vw, 72px);
-    text-transform: uppercase;
-    letter-spacing: 3px;
-  }
-  h1 .aka-line {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    font-weight: 400;
-    letter-spacing: 4px;
-    color: var(--muted);
-    align-self: center;
-    margin-top: 0;
+    font-size: 12px; color: var(--muted);
   }
-  h1 .nick-line { font-size: clamp(40px, 9.8vw, 84px); }
+  .views img { height: 12px; display: block; opacity: .85; }
 
-  /* фиолетовый поток: ярче, непрерывный цикл в одну сторону */
+  /* аватар */
+  .avatar-wrap { position: relative; margin-bottom: 18px; }
+  .avatar {
+    width: 128px; height: 128px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid rgba(217,179,255,.35);
+    box-shadow:
+      0 0 0 6px rgba(124,80,220,.12),
+      0 0 46px rgba(148, 100, 255, .38),
+      inset 0 0 18px rgba(0,0,0,.5);
+    display: block;
+  }
+  .avatar-ring {
+    position: absolute; inset: -9px;
+    border-radius: 50%;
+    border: 1px solid rgba(217,179,255,.18);
+  }
+
+  /* имя */
   .grad {
     background: linear-gradient(90deg,
       #262033 0%, #a06bff 10%, #d9b3ff 22%, #9b6cff 35%,
       #3a2f52 47%, #262033 50%, #a06bff 60%, #d9b3ff 72%,
       #8a5cf5 85%, #262033 100%);
     background-size: 200% 100%;
-    -webkit-background-clip: text;
-    background-clip: text;
+    -webkit-background-clip: text; background-clip: text;
     color: transparent;
     animation: shimmer 10s linear infinite;
   }
@@ -175,256 +148,181 @@
     to   { background-position: -200% 50%; }
   }
 
-  .handle {
-    font-family: 'JetBrains Mono', monospace;
-    color: var(--muted);
-    font-size: 15px;
-    margin-bottom: 28px;
-  }
-  .handle b { color: var(--text); font-weight: 500; }
-
-  /* ---------- чипы о себе ---------- */
-  .tags { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 56px; }
-  .tag {
-    font-size: 13.5px;
-    padding: 8px 16px;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    background: rgba(18,18,22,.6);
-    color: #c9c9d4;
-    transition: border-color .25s, color .25s, transform .25s;
-  }
-  .tag:hover { border-color: var(--accent); color: #fff; transform: translateY(-2px); }
-  .tag .dim { color: var(--muted); font-size: 12px; }
-
-  /* ---------- секции ---------- */
-  .section-title {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    color: var(--muted);
-    margin-bottom: 20px;
-    display: flex; align-items: center; gap: 14px;
-  }
-  .section-title::after {
-    content: ""; flex: 1; height: 1px;
-    background: linear-gradient(90deg, var(--border), transparent);
-  }
-  section { margin-bottom: 56px; }
-
-  /* ---------- соцсети ---------- */
-  .links { display: grid; gap: 12px; }
-  .link {
-    display: flex; align-items: center; gap: 16px;
-    padding: 16px 20px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    text-decoration: none;
-    color: var(--text);
-    transition: transform .25s cubic-bezier(.2,.7,.3,1), border-color .25s, background .25s;
-    position: relative;
-    overflow: hidden;
-  }
-  .link::before {
-    content: "";
-    position: absolute; inset: 0;
-    background: linear-gradient(90deg, rgba(124,156,255,.08), transparent 60%);
-    opacity: 0; transition: opacity .3s;
-  }
-  .link:hover {
-    transform: translateX(6px);
-    border-color: rgba(124,156,255,.5);
-  }
-  .link:hover::before { opacity: 1; }
-  .link svg { width: 22px; height: 22px; flex-shrink: 0; color: var(--muted); transition: color .25s; }
-  .link:hover svg { color: var(--accent); }
-  .link .name { font-weight: 600; font-size: 15px; }
-  .link .val {
-    font-family: 'JetBrains Mono', monospace;
-    color: var(--muted); font-size: 12.5px;
-    margin-left: auto; text-align: right;
-    transition: color .25s;
-  }
-  .link:hover .val { color: #b9b9c6; }
-  .arrow { margin-left: 14px; color: var(--muted); font-size: 14px; transition: transform .25s, color .25s; }
-  .link:hover .arrow { transform: translateX(4px); color: var(--accent); }
-
-  /* ---------- карточки-заглушки ---------- */
-  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; }
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 22px;
-    min-height: 150px;
-    display: flex; flex-direction: column; justify-content: space-between;
-    transition: transform .3s cubic-bezier(.2,.7,.3,1), border-color .3s;
-    cursor: default;
-  }
-  .card:hover { transform: translateY(-6px); border-color: rgba(180,140,255,.45); }
-  .card .num {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px; color: var(--muted);
-    letter-spacing: 2px;
-  }
-  .card .soon {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px; color: #6f6f7c;
+  h1 {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -.5px;
+    line-height: 1.15;
     display: flex; align-items: center; gap: 8px;
   }
-  .card .soon::before {
-    content: "";
-    width: 6px; height: 6px; border-radius: 50%;
-    background: var(--accent2);
-    animation: blink 1.6s infinite;
+  .handle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13.5px;
+    color: var(--accent2);
+    opacity: .9;
+    margin: 2px 0 16px;
   }
-  @keyframes blink { 0%,100% { opacity: 1 } 50% { opacity: .25 } }
-  .card .bar {
-    height: 5px; border-radius: 4px; margin: 10px 0 14px;
-    background: linear-gradient(90deg, var(--border) 0%, var(--border) 70%, transparent 70%);
-    background-size: 200% 100%;
-    animation: fill 3.2s ease-in-out infinite alternate;
-  }
-  @keyframes fill { to { background-size: 130% 100%; } }
 
-  /* ---------- футер ---------- */
-  footer {
-    text-align: center;
+  /* бейджи-иконки */
+  .badges { display: flex; gap: 10px; margin-bottom: 14px; }
+  .badge {
+    width: 38px; height: 38px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px;
+    transition: transform .25s, border-color .25s;
+  }
+  .badge:hover { transform: translateY(-3px) scale(1.06); border-color: rgba(217,179,255,.45); }
+
+  /* чипы */
+  .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 22px; }
+  .chip {
+    padding: 7px 15px;
+    border-radius: 999px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #d9d2ea;
+    letter-spacing: .3px;
+    transition: border-color .25s, color .25s;
+  }
+  .chip:hover { border-color: rgba(217,179,255,.5); color: #fff; }
+  .chip .dim { color: var(--muted); font-weight: 400; }
+
+  /* список фактов */
+  .facts {
+    width: 100%;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 7px;
+    margin-bottom: 24px;
+    font-size: 14.5px;
+  }
+  .facts a {
+    color: var(--accent2);
+    text-decoration: underline;
+    text-decoration-color: rgba(217,179,255,.35);
+    text-underline-offset: 3px;
+    transition: color .2s;
+  }
+  .facts a:hover { color: #fff; }
+  .facts .row { display: flex; gap: 8px; align-items: baseline; color: #cfcae0; }
+  .facts .arrow { color: var(--accent); font-size: 11px; }
+
+  /* соцсети */
+  .socials { display: flex; gap: 12px; margin-bottom: 20px; }
+  .soc {
+    width: 46px; height: 46px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    color: #cfc6e6;
+    transition: transform .25s cubic-bezier(.2,.7,.3,1), border-color .25s, color .25s, box-shadow .25s;
+  }
+  .soc svg { width: 21px; height: 21px; }
+  .soc:hover {
+    transform: translateY(-4px);
+    border-color: rgba(217,179,255,.55);
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.14), 0 8px 22px rgba(90, 50, 180, .35);
+  }
+
+  /* низ */
+  .bottom {
+    display: flex; align-items: center; gap: 8px;
     font-family: 'JetBrains Mono', monospace;
     font-size: 12px;
-    color: #5c5c68;
-    padding-top: 8px;
+    color: var(--muted);
   }
-  footer .cat {
-    width: 64px;
-    display: block;
-    margin: 0 auto 14px;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    transition: transform .3s;
-  }
-  footer .cat:hover { transform: scale(1.12) rotate(-4deg); }
+  .bottom .dot { color: #4ade80; animation: blink 2s infinite; }
+  @keyframes blink { 0%,100% { opacity: 1 } 50% { opacity: .3 } }
 
-  @media (max-width: 560px) {
-    .wrap { padding-top: 52px; }
-    .link .val { display: none; }
+  /* появления */
+  .rise { opacity: 0; transform: translateY(12px); animation: rise .6s cubic-bezier(.2,.7,.3,1) forwards; }
+  .d1 { animation-delay: .15s } .d2 { animation-delay: .28s } .d3 { animation-delay: .4s }
+  .d4 { animation-delay: .52s } .d5 { animation-delay: .64s } .d6 { animation-delay: .76s }
+  @keyframes rise { to { opacity: 1; transform: none; } }
+
+  @media (max-width: 440px) {
+    body { padding: 14px 10px; }
+    .inner { padding: 56px 20px 22px; }
   }
 </style>
 </head>
 <body>
 
-<div class="grid-bg"></div>
-<div class="orb orb-1"></div>
-<div class="orb orb-2"></div>
+<article class="card">
+  <div class="card-bg"></div>
 
-<div class="fall-layer" aria-hidden="true">
-  <span class="fall" style="left: 4%;  font-size: 14px; animation-duration: 42s; animation-delay: -6s;">function</span>
-  <span class="fall" style="left: 12%; font-size: 18px; animation-duration: 55s; animation-delay: -28s;">osint</span>
-  <span class="fall" style="left: 22%; font-size: 12px; animation-duration: 38s; animation-delay: -14s;">git commit -m</span>
-  <span class="fall" style="left: 30%; font-size: 16px; animation-duration: 50s; animation-delay: -40s;">async / await</span>
-  <span class="fall" style="left: 39%; font-size: 13px; animation-duration: 44s; animation-delay: -2s;">syntax</span>
-  <span class="fall" style="left: 47%; font-size: 19px; animation-duration: 60s; animation-delay: -33s;">terminal</span>
-  <span class="fall" style="left: 55%; font-size: 12px; animation-duration: 36s; animation-delay: -20s;">debug</span>
-  <span class="fall" style="left: 62%; font-size: 15px; animation-duration: 48s; animation-delay: -10s;">compile</span>
-  <span class="fall" style="left: 70%; font-size: 13px; animation-duration: 40s; animation-delay: -45s;">binary</span>
-  <span class="fall" style="left: 78%; font-size: 17px; animation-duration: 53s; animation-delay: -25s;">kernel</span>
-  <span class="fall" style="left: 86%; font-size: 12px; animation-duration: 37s; animation-delay: -17s;">regex</span>
-  <span class="fall" style="left: 92%; font-size: 15px; animation-duration: 46s; animation-delay: -50s;">deploy</span>
-  <span class="fall" style="left: 8%;  font-size: 12px; animation-duration: 47s; animation-delay: -35s;">prompt</span>
-  <span class="fall" style="left: 26%; font-size: 14px; animation-duration: 57s; animation-delay: -8s;">ssh tunnel</span>
-  <span class="fall" style="left: 44%; font-size: 12px; animation-duration: 39s; animation-delay: -22s;">payload</span>
-  <span class="fall" style="left: 58%; font-size: 16px; animation-duration: 51s; animation-delay: -47s;">python</span>
-  <span class="fall" style="left: 74%; font-size: 12px; animation-duration: 43s; animation-delay: -12s;">hash map</span>
-  <span class="fall" style="left: 88%; font-size: 14px; animation-duration: 49s; animation-delay: -30s;">latency</span>
-</div>
-
-<main class="wrap">
-
-  <div class="rise d1"><span class="status"><span class="dot"></span>онлайн · открыт к общению</span></div>
-
-  <h1 class="rise d2">
-    <span class="grad name-line">Ванек</span>
-    <span class="aka-line">· aka ·</span>
-    <span class="grad nick-line">wwizzer</span>
-  </h1>
-  <p class="handle rise d3">творю · генерирую новое из ничего · собираю из идей рабочее</p>
-
-  <div class="tags rise d4">
-    <span class="tag">🧠 социальный инженер</span>
-    <span class="tag">⚙️ инженер по генеративной разработке</span>
-    <span class="tag">🕵️ <span class="dim">в прошлом</span> osint-разведчик</span>
+  <div class="fall-layer" aria-hidden="true">
+    <span class="fall" style="left: 6%;  font-size: 12px; animation-duration: 14s; animation-delay: -3s;">❄</span>
+    <span class="fall" style="left: 18%; font-size: 9px;  animation-duration: 19s; animation-delay: -11s;">❄</span>
+    <span class="fall" style="left: 30%; font-size: 11px; animation-duration: 16s; animation-delay: -7s;">❄</span>
+    <span class="fall" style="left: 42%; font-size: 8px;  animation-duration: 22s; animation-delay: -15s;">❄</span>
+    <span class="fall" style="left: 55%; font-size: 12px; animation-duration: 15s; animation-delay: -1s;">❄</span>
+    <span class="fall" style="left: 67%; font-size: 9px;  animation-duration: 20s; animation-delay: -9s;">❄</span>
+    <span class="fall" style="left: 78%; font-size: 11px; animation-duration: 17s; animation-delay: -13s;">❄</span>
+    <span class="fall" style="left: 90%; font-size: 10px; animation-duration: 21s; animation-delay: -5s;">❄</span>
+    <span class="fall" style="left: 12%; font-size: 10px; animation-duration: 18s; animation-delay: -17s;">❄</span>
+    <span class="fall" style="left: 84%; font-size: 9px;  animation-duration: 23s; animation-delay: -19s;">❄</span>
+    <span class="fall" style="left: 9%;  font-size: 11px; animation-duration: 44s; animation-delay: -8s;">osint</span>
+    <span class="fall" style="left: 36%; font-size: 10px; animation-duration: 52s; animation-delay: -30s;">prompt</span>
+    <span class="fall" style="left: 63%; font-size: 11px; animation-duration: 47s; animation-delay: -21s;">payload</span>
+    <span class="fall" style="left: 86%; font-size: 10px; animation-duration: 55s; animation-delay: -41s;">deploy</span>
   </div>
 
-  <section class="rise d5">
-    <div class="section-title">Связь и соцсети</div>
-    <div class="links">
+  <div class="views glass">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+    <img src="https://count.getloli.com/get/@wwizzer-bio?theme=rule34" alt="просмотры">
+  </div>
 
-      <a class="link" href="https://t.me/homewwizzer" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.04 15.51 8.9 19a1 1 0 0 0 1.65.76l2.4-2.1 4.97 3.65a1 1 0 0 0 1.56-.6l3.35-15.6a1 1 0 0 0-1.34-1.14L1.6 10.36a1 1 0 0 0 .07 1.89l4.3 1.35 10.03-6.34c.35-.22.67.27.37.53l-7.33 7.72z"/></svg>
-        <span class="name">Telegram</span>
-        <span class="val">@homewwizzer</span>
-        <span class="arrow">→</span>
-      </a>
+  <div class="inner">
 
-      <a class="link" href="https://www.tiktok.com/@.wwizzer" target="_blank" rel="noopener">
+    <div class="avatar-wrap rise d1">
+      <span class="avatar-ring"></span>
+      <img class="avatar" src="cat-wave.gif" alt="аватар wwizzer">
+    </div>
+
+    <h1 class="rise d2"><span class="grad">wwizzer</span> <span style="font-size:22px">🐾</span></h1>
+    <div class="handle rise d2">@wwizzer</div>
+
+    <div class="badges rise d3">
+      <span class="badge glass" title="социальный инженер">🧠</span>
+      <span class="badge glass" title="генеративная разработка">⚙️</span>
+      <span class="badge glass" title="в прошлом osint-разведчик">🕵️</span>
+    </div>
+
+    <div class="chips rise d3">
+      <span class="chip glass">СОЦ ИНЖЕНЕР</span>
+      <span class="chip glass">ГЕНЕРАТИВНАЯ РАЗРАБОТКА</span>
+      <span class="chip glass"><span class="dim">в прошлом</span> OSINT</span>
+    </div>
+
+    <div class="facts rise d4">
+      <div class="row"><span class="arrow">▶</span><span>открыт к общению и заказам</span></div>
+      <div class="row"><span class="arrow">▶</span><span>услуги и оплата — <a href="https://funpay.com/users/14152669/" target="_blank" rel="noopener">funpay</a></span></div>
+      <div class="row"><span class="arrow">▶</span><span>подарки — <a href="https://steamcommunity.com/tradeoffer/new/?partner=1373306293&token=tO2Vd8Kj" target="_blank" rel="noopener">steam трейд</a></span></div>
+      <div class="row"><span class="arrow">▶</span><span>пишу — <a href="https://t.me/homewwizzer" target="_blank" rel="noopener">@homewwizzer</a></span></div>
+    </div>
+
+    <div class="socials rise d5">
+      <a class="soc glass" href="https://www.tiktok.com/@.wwizzer" target="_blank" rel="noopener" title="TikTok">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.9 2.9 0 1 1-2.31-2.84V9.35a6.35 6.35 0 1 0 5.76 6.32V8.69a8.2 8.2 0 0 0 4.77 1.52V6.79c-.34 0-.67-.03-1-.1z"/></svg>
-        <span class="name">TikTok</span>
-        <span class="val">@.wwizzer</span>
-        <span class="arrow">→</span>
       </a>
-
-      <a class="link" href="https://funpay.com/users/14152669/" target="_blank" rel="noopener">
+      <a class="soc glass" href="https://t.me/homewwizzer" target="_blank" rel="noopener" title="Telegram">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.04 15.51 8.9 19a1 1 0 0 0 1.65.76l2.4-2.1 4.97 3.65a1 1 0 0 0 1.56-.6l3.35-15.6a1 1 0 0 0-1.34-1.14L1.6 10.36a1 1 0 0 0 .07 1.89l4.3 1.35 10.03-6.34c.35-.22.67.27.37.53l-7.33 7.72z"/></svg>
+      </a>
+      <a class="soc glass" href="https://funpay.com/users/14152669/" target="_blank" rel="noopener" title="FunPay">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2 3 7v10l9 5 9-5V7l-9-5z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg>
-        <span class="name">FunPay</span>
-        <span class="val">услуги и услуги по играм</span>
-        <span class="arrow">→</span>
       </a>
-
-      <a class="link" href="https://steamcommunity.com/tradeoffer/new/?partner=1373306293&token=tO2Vd8Kj" target="_blank" rel="noopener">
+      <a class="soc glass" href="https://steamcommunity.com/tradeoffer/new/?partner=1373306293&token=tO2Vd8Kj" target="_blank" rel="noopener" title="Steam трейд">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 12V8a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2z"/><path d="M20 12h-4l-2 3h-4l-2-3H2"/></svg>
-        <span class="name">Steam · трейд</span>
-        <span class="val">подарки / оплата услуг</span>
-        <span class="arrow">→</span>
       </a>
-
     </div>
-  </section>
 
-  <section class="rise d6">
-    <div class="section-title">Работы · скоро</div>
-    <div class="cards">
-      <div class="card">
-        <div>
-          <div class="num">01 / ПРОЕКТ</div>
-          <div class="bar"></div>
-        </div>
-        <div class="soon">coming soon</div>
-      </div>
-      <div class="card">
-        <div>
-          <div class="num">02 / ПРОЕКТ</div>
-          <div class="bar"></div>
-        </div>
-        <div class="soon">coming soon</div>
-      </div>
-      <div class="card">
-        <div>
-          <div class="num">03 / ПРОЕКТ</div>
-          <div class="bar"></div>
-        </div>
-        <div class="soon">coming soon</div>
-      </div>
+    <div class="bottom rise d6">
+      <span class="dot">●</span> online · wwizzer © 2026 · с любовью 🐾
     </div>
-  </section>
 
-  <footer class="rise d6">
-    <img class="cat" src="cat-wave.gif" alt="кот машет рукой">
-    <div>wwizzer © 2026 · сделано с любовью</div>
-  </footer>
-
-</main>
+  </div>
+</article>
 
 </body>
 </html>
